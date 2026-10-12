@@ -42,7 +42,7 @@ jobs:
           version: stable
 
       - name: Install package
-        run: raco pkg install --auto --link .
+        run: raco pkg install --auto --link "$(pwd)"
 
       - name: Run tests
         run: raco test -p onnxruntime
