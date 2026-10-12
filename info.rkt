@@ -10,7 +10,15 @@
 (define pkg-authors '("turinglambdaai"))
 (define license 'MIT)
 (define scribblings '(("onnxruntime/scribblings/onnxruntime.scrbl" ())))
-;; "onnxruntime-tests.rkt" is loaded conditionally by "onnxruntime-test.rkt"
-;; (native library probe); the scribblings module is not a test.
-(define test-omit-paths '("onnxruntime/test/onnxruntime-tests.rkt"
-                          "onnxruntime/scribblings"))
+;; The catalog build farm runs `raco test --package`, executing every module
+;; in the package as a test.  The modules that load the ONNX Runtime native
+;; library at require time cannot run on machines without it (the farm), so
+;; they are omitted here; the CI workflow and
+;; `raco test onnxruntime/test/onnxruntime-test.rkt` exercise the full suite
+;; through the probe entry point.
+(define test-omit-paths
+  '("onnxruntime/test/onnxruntime-tests.rkt" ; loaded conditionally by the probe
+    "onnxruntime/scribblings"                ; documentation, not tests
+    "onnxruntime/main.rkt"
+    "onnxruntime/private/ffi.rkt"
+    "onnxruntime/private/session.rkt"))

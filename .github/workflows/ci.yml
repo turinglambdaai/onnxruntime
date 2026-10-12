@@ -48,4 +48,4 @@ jobs:
         run: raco pkg install --auto --link "$(pwd)"
 
       - name: Run tests
-        run: raco test -p onnxruntime
+        run: raco test onnxruntime/test/onnxruntime-test.rkt
