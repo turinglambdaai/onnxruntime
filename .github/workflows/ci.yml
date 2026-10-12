@@ -36,7 +36,8 @@ jobs:
         if: runner.os == 'macOS'
         run: echo "DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/opt/onnxruntime/lib" >> "$GITHUB_ENV"
 
-      - uses: racket/setup-racket@v1
+      - name: Set up Racket
+        uses: Bogdanp/setup-racket@v1.12
         with:
           version: stable
 
