@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      # The Ubuntu runtime (1.19.2, OrtApi version 19) is deliberately older
+      # than the header this package was generated against (31): the CI run
+      # exercises the downward API-version negotiation path for real.
+      ORT_VERSION: "1.19.2"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ONNX Runtime (macOS, Homebrew)
+        if: runner.os == 'macOS'
+        run: brew install onnxruntime
+
+      - name: Install ONNX Runtime (Linux, official release tgz)
+        if: runner.os == 'Linux'
+        run: |
+          curl -fSL -o /tmp/ort.tgz \
+            "https://github.com/microsoft/onnxruntime/releases/download/v${ORT_VERSION}/onnxruntime-linux-x64-${ORT_VERSION}.tgz"
+          mkdir -p "$HOME/.local/opt"
+          tar -xzf /tmp/ort.tgz -C "$HOME/.local/opt"
+          echo "LD_LIBRARY_PATH=$HOME/.local/opt/onnxruntime-linux-x64-${ORT_VERSION}/lib" >> "$GITHUB_ENV"
+
+      - name: Export macOS loader path
+        if: runner.os == 'macOS'
+        run: echo "DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/opt/onnxruntime/lib" >> "$GITHUB_ENV"
+
+      - uses: racket/setup-racket@v1
+        with:
+          version: stable
+
+      - name: Install package
+        run: raco pkg install --auto --link .
+
+      - name: Run tests
+        run: raco test -p onnxruntime
