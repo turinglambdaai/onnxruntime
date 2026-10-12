@@ -20,6 +20,9 @@ OPSET = 13  # old enough for any runtime we target, new enough for Add broadcast
 
 def save(model, name):
     path = os.path.join(OUT, name)
+    # ORT <= 1.19 (the oldest runtime our CI exercises) supports IR <= 10;
+    # pin so the same fixtures load everywhere.
+    model.ir_version = 10
     onnx.checker.check_model(model)
     onnx.save(model, path)
     print("wrote", path, os.path.getsize(path), "bytes")

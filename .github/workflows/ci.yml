@@ -39,6 +39,9 @@ jobs:
       - name: Set up Racket
         uses: Bogdanp/setup-racket@v1.12
         with:
+          # arm64 on macOS: brew's libonnxruntime is arm64-only, and an x64
+          # Racket (the action default) cannot dlopen it.
+          architecture: ${{ matrix.os == 'macos-latest' && 'arm64' || 'x64' }}
           version: stable
 
       - name: Install package
