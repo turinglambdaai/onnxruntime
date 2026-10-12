@@ -1,5 +1,7 @@
 # onnxruntime
 
+[![CI](https://github.com/turinglambdaai/onnxruntime/actions/workflows/ci.yml/badge.svg)](https://github.com/turinglambdaai/onnxruntime/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Racket FFI bindings to the [ONNX Runtime](https://onnxruntime.ai/) C API
 for CPU inference of ONNX models — the runtime leg of
 *train in Python once, export `.onnx`, infer anywhere*.
