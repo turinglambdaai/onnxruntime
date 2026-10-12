@@ -101,13 +101,13 @@ Convenience: look up the tensor bound to @racket[name] in an
 Returns the ONNX Runtime library version string, e.g.
 @racketresult["1.31.0"].}
 
-@defproc[(onnx-api-version) exact-nonneg-integer?]{
+@defproc[(onnx-api-version) exact-nonnegative-integer?]{
 
 Returns the OrtApi table version negotiated at load time (at most 31;
 see @secref["version-negotiation"] for what that means on older
 runtimes).}
 
-@defstruct*[ort-tensor ([shape (listof exact-nonneg-integer?)]
+@defstruct*[ort-tensor ([shape (listof exact-nonnegative-integer?)]
                         [data flvector?])]{
 
 A float32 tensor: @racket[shape] in row-major order and @racket[data] as
